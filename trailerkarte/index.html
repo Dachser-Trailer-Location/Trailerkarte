@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Trailerkarte</title>
+  <style>
+    body { background: #222; color: white; font-family: sans-serif; text-align: center; }
+    #map { position: relative; display: inline-block; }
+    #map img { width: 100%; max-width: 900px; }
+    .marker {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: red;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Trailerkarte</h1>
+  <input type="text" id="stNummer" placeholder="ST-Nummer">
+  <div id="map">
+    <img src="hofkarte.jpg" id="karte">
+    <div id="markerLayer"></div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>

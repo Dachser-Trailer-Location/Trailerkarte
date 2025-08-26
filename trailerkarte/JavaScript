@@ -1,0 +1,63 @@
+const SUPABASE_URL = "https://ehvsushepbyzgcjcldqx.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVodnN1c2hlcGJ5emdjamNsZHF4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYxOTQ3MDcsImV4cCI6MjA3MTc3MDcwN30.Ie8E0jkQPy4cB-fSXoHd-yuH58VP5bzNlYGDFCs6fT8";
+
+const stInput = document.getElementById("stNummer");
+const karte = document.getElementById("karte");
+const markerLayer = document.getElementById("markerLayer");
+
+karte.addEventListener("click", async (e) => {
+  const rect = karte.getBoundingClientRect();
+  const x = Math.round(e.clientX - rect.left);
+  const y = Math.round(e.clientY - rect.top);
+  const st = stInput.value.trim();
+  if (!st) return alert("ST-Nummer eingeben!");
+
+  await fetch(`${SUPABASE_URL}/rest/v1/auflieger`, {
+    method: "POST",
+    headers: {
+      "apikey": SUPABASE_KEY,
+      "Authorization": `Bearer ${SUPABASE_KEY}`,
+      "Content-Type": "application/json",
+      "Prefer": "return=representation"
+    },
+    body: JSON.stringify({ st_nummer: st, x, y })
+  });
+
+  stInput.value = "";
+  ladeMarker();
+});
+
+async function ladeMarker() {
+  markerLayer.innerHTML = "";
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/auflieger`, {
+    headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
+  });
+  const daten = await res.json();
+  daten.forEach(trailer => {
+    const div = document.createElement("div");
+    div.className = "marker";
+    div.style.left = trailer.x + "px";
+    div.style.top = trailer.y + "px";
+    div.title = trailer.st_nummer;
+    div.onclick = () => loeschen(trailer.id);
+    markerLayer.appendChild(div);
+  });
+}
+
+async function loeschen(id) {
+  if (!confirm("Trailer löschen?")) return;
+  await fetch(`${SUPABASE_URL}/rest/v1/auflieger?id=eq.${id}`, {
+    method: "DELETE",
+    headers: {
+      "apikey": SUPABASE_KEY,
+      "Authorization": `Bearer ${SUPABASE_KEY}`
+    }
+  });
+  ladeMarker();
+}
+
+ladeMarker();
+
+
+const SUPABASE_URL = "https://ehvsushepbyzgcjcldqx.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVodnN1c2hlcGJ5emdjamNsZHF4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYxOTQ3MDcsImV4cCI6MjA3MTc3MDcwN30.Ie8E0jkQPy4cB-fSXoHd-yuH58VP5bzNlYGDFCs6fT8";
