@@ -59,5 +59,3 @@ async function loeschen(id) {
 ladeMarker();
 
 
-const SUPABASE_URL = "https://ehvsushepbyzgcjcldqx.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVodnN1c2hlcGJ5emdjamNsZHF4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYxOTQ3MDcsImV4cCI6MjA3MTc3MDcwN30.Ie8E0jkQPy4cB-fSXoHd-yuH58VP5bzNlYGDFCs6fT8";
