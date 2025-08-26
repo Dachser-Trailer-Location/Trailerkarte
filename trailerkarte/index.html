@@ -1,30 +1,89 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Trailerkarte</title>
   <style>
-    body { background: #222; color: white; font-family: sans-serif; text-align: center; }
-    #map { position: relative; display: inline-block; }
-    #map img { width: 100%; max-width: 900px; }
-    .marker {
-      position: absolute;
-      width: 20px;
-      height: 20px;
-      background: red;
-      border-radius: 50%;
-      transform: translate(-50%, -50%);
-      cursor: pointer;
-    }
+    body { font-family: sans-serif; padding: 20px; }
+    input, select, button { margin: 5px; }
   </style>
 </head>
 <body>
-  <h1>Trailerkarte</h1>
-  <input type="text" id="stNummer" placeholder="ST-Nummer">
-  <div id="map">
-    <img src="hofkarte.jpg" id="karte">
-    <div id="markerLayer"></div>
-  </div>
-  <script src="script.js"></script>
+  <h1>🛻 Trailerkarte</h1>
+
+  <!-- Eingabefeld -->
+  <input type="text" id="aufliegerInput" placeholder="Auflieger eingeben" />
+
+  <!-- Buttons -->
+  <button onclick="speichern()">Speichern</button>
+  <button onclick="aendern()">Ändern</button>
+  <button onclick="loeschen()">Löschen</button>
+
+  <!-- Dropdown-Liste -->
+  <h3>Gespeicherte Auflieger:</h3>
+  <select id="aufliegerListe" size="5" onchange="aufliegerAuswahl()">
+    <!-- Dynamisch gefüllt -->
+  </select>
+
+  <script>
+    let aufliegerDaten = []; // Platzhalter für Daten aus Supabase
+    let ausgewählt = null;
+
+    function laden() {
+      // Hier später Supabase-Daten abrufen
+      // Beispiel-Daten:
+      aufliegerDaten = ["ABC123", "XYZ789", "DEF456"];
+      aktualisiereListe();
+    }
+
+    function aktualisiereListe() {
+      const liste = document.getElementById("aufliegerListe");
+      liste.innerHTML = "";
+      aufliegerDaten.forEach((item, index) => {
+        const option = document.createElement("option");
+        option.text = item;
+        option.value = index;
+        liste.add(option);
+      });
+    }
+
+    function aufliegerAuswahl() {
+      const liste = document.getElementById("aufliegerListe");
+      ausgewählt = liste.value;
+      document.getElementById("aufliegerInput").value = aufliegerDaten[ausgewählt];
+    }
+
+    function speichern() {
+      const neuer = document.getElementById("aufliegerInput").value;
+      if (neuer) {
+        aufliegerDaten.push(neuer);
+        aktualisiereListe();
+        document.getElementById("aufliegerInput").value = "";
+        // Supabase: INSERT
+      }
+    }
+
+    function aendern() {
+      const neuer = document.getElementById("aufliegerInput").value;
+      if (ausgewählt !== null && neuer) {
+        aufliegerDaten[ausgewählt] = neuer;
+        aktualisiereListe();
+        // Supabase: UPDATE
+      }
+    }
+
+    function loeschen() {
+      if (ausgewählt !== null) {
+        aufliegerDaten.splice(ausgewählt, 1);
+        ausgewählt = null;
+        document.getElementById("aufliegerInput").value = "";
+        aktualisiereListe();
+        // Supabase: DELETE
+      }
+    }
+
+    // Seite laden
+    window.onload = laden;
+  </script>
 </body>
 </html>
